@@ -5,6 +5,7 @@ import (
 	"net"
 	"net/rpc"
 	"sync"
+	"fmt"
 )
 
 const (
@@ -77,9 +78,12 @@ func (master *Master) acceptMultipleConnections() {
 
 // handleFailingWorkers will handle workers that fails during an operation.
 func (master *Master) handleFailingWorkers() {
-	/////////////////////////
-	// YOUR CODE GOES HERE //
-	/////////////////////////
+	for elem := range master.failedWorkerChan {
+		master.workersMutex.Lock()
+		delete(master.workers, elem.id)
+		master.workersMutex.Unlock()
+		fmt.Println("Removing worker", elem.id, "from master list.")
+    }
 }
 
 // Handle a single connection until it's done, then closes it.
